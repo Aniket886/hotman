@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { Github } from "lucide-react";
 import { InstallButton } from "@/components/InstallButton";
 import logo from "@/assets/logo.png";
 
@@ -205,15 +206,16 @@ function Index() {
 
         <footer className="mt-auto pt-4 text-center text-[11px] text-app-subtle">
           <div>Tap a preset to convert instantly</div>
-          <div className="mt-2">
-            Developer{" "}
+          <div className="mt-2 flex items-center justify-center gap-1.5">
+            <span>Developer</span>
             <a
               href="https://github.com/Aniket886"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-app-fg underline-offset-4 hover:underline animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
+              className="inline-flex items-center gap-1 font-semibold underline-offset-4 hover:underline animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
               style={{ color: "var(--accent-1)" }}
             >
+              <Github size={12} strokeWidth={2.2} />
               Aniket Tegginamath
             </a>
           </div>
