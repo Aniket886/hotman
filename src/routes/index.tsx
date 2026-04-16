@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { InstallButton } from "@/components/InstallButton";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -196,6 +197,10 @@ function Index() {
             ))}
           </div>
         </section>
+
+        <div className="mt-4">
+          <InstallButton />
+        </div>
 
         <footer className="mt-auto pt-4 text-center text-[11px] text-app-subtle">
           Tap a preset to convert instantly
