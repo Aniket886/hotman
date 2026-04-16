@@ -265,8 +265,20 @@ function Index() {
                 <span>Spectrum</span>
                 <span>110°</span>
               </div>
-              <div className="relative pb-5">
+              <div
+                className="relative cursor-pointer touch-none select-none py-3"
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerUp}
+                role="slider"
+                aria-label="Temperature spectrum"
+                aria-valuemin={SPEC_MIN}
+                aria-valuemax={SPEC_MAX}
+                aria-valuenow={Math.round(results.C)}
+              >
                 <div
+                  ref={trackRef}
                   className="relative h-2.5 w-full overflow-visible rounded-full"
                   style={{
                     background:
@@ -277,7 +289,7 @@ function Index() {
                   {TICKS.map((t) => (
                     <div
                       key={t.c}
-                      className="absolute top-0 h-full"
+                      className="pointer-events-none absolute top-0 h-full"
                       style={{ left: `${pct(t.c)}%` }}
                     >
                       <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/70" />
@@ -287,7 +299,7 @@ function Index() {
                     </div>
                   ))}
                   <div
-                    className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-lg transition-[left,background] duration-500 ease-out"
+                    className="pointer-events-none absolute top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-lg transition-[background] duration-300 ease-out"
                     style={{
                       left: `${Math.max(0, Math.min(100, pct(results.C)))}%`,
                       background: vibe ? `rgb(${vibe.tint})` : "white",
