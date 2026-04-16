@@ -49,6 +49,26 @@ const fmt = (n: number) => {
   return n.toFixed(2);
 };
 
+type Vibe = {
+  id: string;
+  emoji: string;
+  label: string;
+  tint: string; // "r g b"
+};
+
+const getVibe = (c: number): Vibe => {
+  if (c <= -273) return { id: "absolute", emoji: "⚛️", label: "Absolute Zero", tint: "168 85 247" };
+  if (c < -50) return { id: "frigid", emoji: "🧊", label: "Frigid", tint: "186 230 253" };
+  if (c < 0) return { id: "freezing", emoji: "❄️", label: "Freezing", tint: "96 165 250" };
+  if (c < 10) return { id: "cold", emoji: "🥶", label: "Cold", tint: "56 189 248" };
+  if (c < 18) return { id: "chilly", emoji: "🌬️", label: "Chilly", tint: "34 211 238" };
+  if (c < 26) return { id: "comfy", emoji: "😊", label: "Comfortable", tint: "52 211 153" };
+  if (c < 32) return { id: "warm", emoji: "☀️", label: "Warm", tint: "251 191 36" };
+  if (c < 40) return { id: "hot", emoji: "🥵", label: "Hot", tint: "251 146 60" };
+  if (c < 100) return { id: "scorching", emoji: "🔥", label: "Scorching", tint: "248 113 113" };
+  return { id: "boiling", emoji: "💨", label: "Boiling", tint: "244 114 182" };
+};
+
 function Index() {
   const [unit, setUnit] = useState<Unit>("C");
   const [raw, setRaw] = useState("100");
@@ -59,6 +79,8 @@ function Index() {
     const c = toC(num, unit);
     return { C: c, F: (c * 9) / 5 + 32, K: c + 273.15 };
   }, [raw, unit]);
+
+  const vibe = results ? getVibe(results.C) : null;
 
   const currentSymbol = UNITS.find((u) => u.key === unit)!.symbol;
 
@@ -155,6 +177,24 @@ function Index() {
               {currentSymbol}
             </span>
           </div>
+
+          {vibe && (
+            <div className="mt-4 flex justify-center">
+              <div
+                key={vibe.id}
+                className="animate-vibe-pop inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[12px] font-semibold backdrop-blur-md"
+                style={{
+                  borderColor: `rgb(${vibe.tint} / 0.35)`,
+                  background: `rgb(${vibe.tint} / 0.12)`,
+                  color: `rgb(${vibe.tint})`,
+                  boxShadow: `0 4px 16px -8px rgb(${vibe.tint} / 0.5), inset 0 1px 0 0 var(--glass-highlight)`,
+                }}
+              >
+                <span className="text-base leading-none">{vibe.emoji}</span>
+                <span className="tracking-wide">{vibe.label}</span>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Result rows */}
@@ -167,8 +207,9 @@ function Index() {
                 className="glass flex items-center justify-between rounded-2xl px-5 py-4"
               >
                 <div>
-                  <div className="text-[11px] font-medium uppercase tracking-wider text-app-muted">
-                    {u.label}
+                  <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-app-muted">
+                    {vibe && <span className="text-sm leading-none">{vibe.emoji}</span>}
+                    <span>{u.label}</span>
                   </div>
                   <div className="mt-0.5 text-[11px] text-app-subtle">{u.symbol}</div>
                 </div>
