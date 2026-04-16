@@ -25,10 +25,19 @@ export function InstallButton() {
       return;
     }
 
-    const ua = window.navigator.userAgent;
-    if (/iPad|iPhone|iPod/.test(ua)) setDetected("ios");
-    else if (/Android/.test(ua)) setDetected("android");
-    else setDetected("desktop");
+    const detect = () => {
+      const ua = window.navigator.userAgent;
+      const platform = (window.navigator as { platform?: string }).platform ?? "";
+      const isApple = /Mac|iPad|iPhone|iPod/.test(platform) || /Mac OS X/.test(ua);
+      const isNarrow = window.innerWidth < 768;
+
+      if (/iPad|iPhone|iPod/.test(ua)) setDetected("ios");
+      else if (/Android/.test(ua)) setDetected("android");
+      else if (isNarrow) setDetected(isApple ? "ios" : "android");
+      else setDetected("desktop");
+    };
+    detect();
+    window.addEventListener("resize", detect);
 
     const onPrompt = (e: Event) => {
       e.preventDefault();
@@ -46,6 +55,7 @@ export function InstallButton() {
     return () => {
       window.removeEventListener("beforeinstallprompt", onPrompt);
       window.removeEventListener("appinstalled", onInstalled);
+      window.removeEventListener("resize", detect);
     };
   }, []);
 
