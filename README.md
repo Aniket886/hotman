@@ -32,9 +32,9 @@ Convert between **Celsius**, **Fahrenheit**, and **Kelvin** — instantly, elega
 
 ## 🎬 Preview
 
-| Input + Vibe | Spectrum + Results |
-|:---:|:---:|
-| Type a value, watch the card tint shift to match the vibe | Drag the marker, see live conversions |
+![Temperature Converter — preview](./public/preview.png)
+
+> Type a value, watch the card tint shift to match the vibe. Drag the spectrum marker to scrub. Tap any result to copy. Install on iOS, Android, or Desktop.
 
 🔗 **Try it live:** [hotman.lovable.app](https://hotman.lovable.app)
 
