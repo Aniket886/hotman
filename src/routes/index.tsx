@@ -9,8 +9,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Convert temperatures between Celsius, Fahrenheit, and Kelvin instantly with a modern glassmorphism interface.",
+          "A professional mobile-first temperature converter. Convert Celsius, Fahrenheit, and Kelvin instantly.",
       },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#1a1d29" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
     ],
   }),
 });
@@ -24,10 +28,11 @@ const UNITS: { key: Unit; label: string; symbol: string }[] = [
 ];
 
 const REFERENCES = [
-  { label: "Water boils", c: 100, f: 212, k: 373.15 },
-  { label: "Body temp", c: 37, f: 98.6, k: 310.15 },
-  { label: "Water freezes", c: 0, f: 32, k: 273.15 },
-  { label: "Absolute zero", c: -273.15, f: -459.67, k: 0 },
+  { label: "Water boils", c: 100 },
+  { label: "Body temperature", c: 37 },
+  { label: "Room temperature", c: 21 },
+  { label: "Water freezes", c: 0 },
+  { label: "Absolute zero", c: -273.15 },
 ];
 
 const toC = (val: number, unit: Unit) => {
@@ -36,7 +41,10 @@ const toC = (val: number, unit: Unit) => {
   return val - 273.15;
 };
 
-const fmt = (n: number) => n.toFixed(2);
+const fmt = (n: number) => {
+  if (Math.abs(n) >= 1000) return n.toFixed(1);
+  return n.toFixed(2);
+};
 
 function Index() {
   const [unit, setUnit] = useState<Unit>("C");
@@ -51,149 +59,146 @@ function Index() {
 
   const currentSymbol = UNITS.find((u) => u.key === unit)!.symbol;
 
-  return (
-    <main className="relative min-h-screen overflow-hidden bg-app-bg text-app-fg">
-      {/* Ambient gradient blobs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="animate-blob absolute -left-32 -top-32 h-[480px] w-[480px] rounded-full opacity-50 blur-3xl"
-          style={{ background: "var(--accent-1)" }}
-        />
-        <div
-          className="animate-blob absolute -right-40 top-1/4 h-[520px] w-[520px] rounded-full opacity-40 blur-3xl"
-          style={{ background: "var(--accent-2)", animationDelay: "-6s" }}
-        />
-        <div
-          className="animate-blob absolute bottom-0 left-1/3 h-[420px] w-[420px] rounded-full opacity-40 blur-3xl"
-          style={{ background: "var(--accent-3)", animationDelay: "-12s" }}
-        />
-      </div>
+  const setQuick = (c: number) => {
+    setUnit("C");
+    setRaw(String(c));
+  };
 
-      <div className="relative mx-auto max-w-[520px] px-5 py-10 sm:py-16">
-        <header className="mb-8 text-center">
-          <h1 className="font-mono text-2xl font-semibold tracking-tight">
-            temp<span className="text-app-muted">.convert</span>
-          </h1>
-          <p className="mt-1.5 text-xs text-app-muted">
-            Celsius · Fahrenheit · Kelvin
-          </p>
+  return (
+    <main className="min-h-screen bg-app-bg text-app-fg">
+      <div className="mx-auto flex min-h-screen max-w-[440px] flex-col px-4 safe-top safe-bottom">
+        {/* Sticky app header */}
+        <header className="sticky top-0 z-10 -mx-4 mb-2 flex items-center justify-between bg-app-bg/85 px-4 py-3 backdrop-blur-xl">
+          <div className="flex items-center gap-2.5">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-xl"
+              style={{
+                background: "var(--accent-1)",
+                boxShadow: "inset 0 1px 0 0 var(--glass-highlight)",
+              }}
+            >
+              <span className="font-mono text-sm font-bold text-white">°</span>
+            </div>
+            <div>
+              <h1 className="text-[15px] font-semibold leading-tight tracking-tight">
+                Temperature
+              </h1>
+              <p className="text-[11px] leading-tight text-app-muted">Converter</p>
+            </div>
+          </div>
+          <div className="text-[11px] font-medium uppercase tracking-wider text-app-muted">
+            Live
+          </div>
         </header>
 
-        <div className="glass-strong rounded-3xl p-6 sm:p-7">
-          <section className="mb-5">
-            <span className="text-[11px] uppercase tracking-wider text-app-muted">
-              Input unit
-            </span>
-            <div className="mt-2.5 flex flex-wrap gap-2">
-              {UNITS.map((u) => {
-                const active = u.key === unit;
-                return (
-                  <button
-                    key={u.key}
-                    onClick={() => setUnit(u.key)}
-                    className={[
-                      "relative rounded-full px-4 py-2 text-[13px] font-medium transition-all duration-300",
-                      active
-                        ? "text-app-fg shadow-[0_0_24px_-4px_var(--accent-1)]"
-                        : "glass text-app-muted hover:text-app-fg hover:-translate-y-0.5",
-                    ].join(" ")}
-                    style={
-                      active
-                        ? {
-                            background:
-                              "linear-gradient(135deg, var(--accent-1), var(--accent-2))",
-                            border: "1px solid var(--glass-highlight)",
-                          }
-                        : undefined
-                    }
-                  >
-                    {u.label} {u.symbol}
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          <section className="mb-6">
-            <label
-              htmlFor="temp-input"
-              className="mb-2 block text-[11px] uppercase tracking-wider text-app-muted"
-            >
-              Enter temperature in {currentSymbol}
-            </label>
-            <input
-              id="temp-input"
-              type="number"
-              step="0.1"
-              value={raw}
-              onChange={(e) => setRaw(e.target.value)}
-              className="glass w-full rounded-2xl px-4 py-3.5 font-mono text-2xl font-semibold text-app-fg outline-none transition-all duration-300 focus:shadow-[0_0_0_3px_color-mix(in_oklab,var(--accent-2)_40%,transparent),0_0_40px_-8px_var(--accent-2)]"
-            />
-          </section>
-
-          <section className="grid grid-cols-3 gap-2.5">
+        {/* Unit segmented control */}
+        <section className="mb-4">
+          <div className="glass flex gap-1 rounded-2xl p-1">
             {UNITS.map((u) => {
               const active = u.key === unit;
-              const val = results ? fmt(results[u.key]) : "—";
               return (
-                <div
+                <button
                   key={u.key}
+                  onClick={() => setUnit(u.key)}
                   className={[
-                    "glass relative overflow-hidden rounded-2xl p-3.5 text-center transition-all duration-300 hover:-translate-y-0.5",
-                    active ? "shadow-[0_0_30px_-8px_var(--accent-1)]" : "",
+                    "flex-1 rounded-xl py-2.5 text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]",
+                    active
+                      ? "text-white shadow-lg"
+                      : "text-app-muted hover:text-app-fg",
                   ].join(" ")}
                   style={
                     active
                       ? {
-                          background:
-                            "linear-gradient(135deg, color-mix(in oklab, var(--accent-1) 22%, transparent), color-mix(in oklab, var(--accent-2) 18%, transparent))",
-                          borderColor: "var(--glass-highlight)",
+                          background: "var(--accent-1)",
+                          boxShadow:
+                            "0 4px 16px -4px color-mix(in oklab, var(--accent-1) 60%, transparent), inset 0 1px 0 0 var(--glass-highlight)",
                         }
                       : undefined
                   }
                 >
-                  <div className="mb-1 text-[10px] uppercase tracking-wider text-app-muted">
-                    {u.label} {u.symbol}
-                  </div>
-                  <div className="font-mono text-xl font-semibold text-app-fg">
-                    {val}
-                  </div>
-                </div>
+                  {u.symbol}
+                </button>
               );
             })}
-          </section>
-        </div>
-
-        <section className="glass mt-6 rounded-3xl p-6">
-          <div className="mb-3 text-[11px] uppercase tracking-wider text-app-muted">
-            Reference points
           </div>
-          <div>
-            {REFERENCES.map((r, i) => (
+        </section>
+
+        {/* Input card */}
+        <section className="glass-strong mb-4 rounded-3xl p-5">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="text-[11px] font-medium uppercase tracking-wider text-app-muted">
+              Enter value
+            </span>
+            <span className="text-[11px] font-medium text-app-subtle">
+              {UNITS.find((u) => u.key === unit)!.label}
+            </span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <input
+              id="temp-input"
+              type="number"
+              inputMode="decimal"
+              step="0.1"
+              value={raw}
+              onChange={(e) => setRaw(e.target.value)}
+              className="w-full bg-transparent font-mono text-5xl font-bold tracking-tight text-app-fg outline-none placeholder:text-app-subtle [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              placeholder="0"
+            />
+            <span className="font-mono text-2xl font-semibold text-app-muted">
+              {currentSymbol}
+            </span>
+          </div>
+        </section>
+
+        {/* Result rows */}
+        <section className="mb-4 space-y-2">
+          {UNITS.filter((u) => u.key !== unit).map((u) => {
+            const val = results ? fmt(results[u.key]) : "—";
+            return (
               <div
+                key={u.key}
+                className="glass flex items-center justify-between rounded-2xl px-5 py-4"
+              >
+                <div>
+                  <div className="text-[11px] font-medium uppercase tracking-wider text-app-muted">
+                    {u.label}
+                  </div>
+                  <div className="mt-0.5 text-[11px] text-app-subtle">{u.symbol}</div>
+                </div>
+                <div className="font-mono text-2xl font-semibold tracking-tight text-app-fg">
+                  {val}
+                </div>
+              </div>
+            );
+          })}
+        </section>
+
+        {/* Reference quick-tap */}
+        <section className="glass mb-4 rounded-3xl p-5">
+          <div className="mb-3 text-[11px] font-medium uppercase tracking-wider text-app-muted">
+            Quick presets
+          </div>
+          <div className="-mx-1">
+            {REFERENCES.map((r, i) => (
+              <button
                 key={r.label}
+                onClick={() => setQuick(r.c)}
                 className={[
-                  "flex items-center justify-between py-2.5 text-[13px]",
-                  i < REFERENCES.length - 1
-                    ? "border-b border-white/10"
-                    : "",
+                  "flex w-full items-center justify-between rounded-lg px-1 py-3 text-left text-[13px] transition-colors active:bg-white/5",
+                  i < REFERENCES.length - 1 ? "border-b border-white/5" : "",
                 ].join(" ")}
               >
-                <span className="text-app-muted">{r.label}</span>
-                <span className="flex gap-2.5 font-mono text-[12px] text-app-fg">
-                  <span>{r.c} °C</span>
-                  <span className="text-app-muted">·</span>
-                  <span>{r.f} °F</span>
-                  <span className="text-app-muted">·</span>
-                  <span>{r.k} K</span>
+                <span className="text-app-fg">{r.label}</span>
+                <span className="font-mono text-[12px] text-app-muted">
+                  {r.c} °C
                 </span>
-              </div>
+              </button>
             ))}
           </div>
         </section>
 
-        <footer className="mt-10 text-center text-[11px] text-app-muted">
-          Real-time conversion · client-side only
+        <footer className="mt-auto pt-4 text-center text-[11px] text-app-subtle">
+          Tap a preset to convert instantly
         </footer>
       </div>
     </main>
