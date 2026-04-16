@@ -72,6 +72,17 @@ const getVibe = (c: number): Vibe => {
 function Index() {
   const [unit, setUnit] = useState<Unit>("C");
   const [raw, setRaw] = useState("100");
+  const [copiedKey, setCopiedKey] = useState<Unit | null>(null);
+
+  const copyValue = async (key: Unit, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedKey(key);
+      window.setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1400);
+    } catch {
+      // ignore
+    }
+  };
 
   const results = useMemo(() => {
     const num = parseFloat(raw);
