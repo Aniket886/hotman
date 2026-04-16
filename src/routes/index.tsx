@@ -207,7 +207,38 @@ function Index() {
           )}
         </section>
 
-        {/* Result rows */}
+        {/* Temperature spectrum */}
+        {results && (
+          <section className="glass mb-4 rounded-2xl px-4 py-3.5">
+            <div className="mb-2 flex items-center justify-between text-[10px] font-medium uppercase tracking-wider text-app-muted">
+              <span>−50°</span>
+              <span>Spectrum</span>
+              <span>50°</span>
+            </div>
+            <div
+              className="relative h-2.5 w-full overflow-hidden rounded-full"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgb(186 230 253) 0%, rgb(96 165 250) 18%, rgb(56 189 248) 32%, rgb(34 211 238) 45%, rgb(52 211 153) 58%, rgb(251 191 36) 72%, rgb(251 146 60) 85%, rgb(248 113 113) 100%)",
+                boxShadow: "inset 0 1px 2px 0 rgba(0,0,0,0.4)",
+              }}
+            >
+              <div
+                className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-lg transition-[left,background] duration-500 ease-out"
+                style={{
+                  left: `${Math.max(0, Math.min(100, ((results.C + 50) / 100) * 100))}%`,
+                  background: vibe ? `rgb(${vibe.tint})` : "white",
+                  boxShadow: vibe
+                    ? `0 0 0 3px rgb(${vibe.tint} / 0.25), 0 2px 8px -2px rgb(${vibe.tint} / 0.6)`
+                    : undefined,
+                }}
+              />
+            </div>
+            <div className="mt-2 text-center font-mono text-[11px] text-app-muted">
+              {fmt(results.C)} °C
+            </div>
+          </section>
+        )}
         <section className="mb-4 space-y-2">
           {UNITS.filter((u) => u.key !== unit).map((u) => {
             const val = results ? fmt(results[u.key]) : "—";
