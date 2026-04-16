@@ -203,7 +203,19 @@ function Index() {
         </div>
 
         <footer className="mt-auto pt-4 text-center text-[11px] text-app-subtle">
-          Tap a preset to convert instantly
+          <div>Tap a preset to convert instantly</div>
+          <div className="mt-2">
+            Developer{" "}
+            <a
+              href="https://github.com/Aniket886"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-app-fg underline-offset-4 hover:underline animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
+              style={{ color: "var(--accent-1)" }}
+            >
+              Aniket Tegginamath
+            </a>
+          </div>
         </footer>
       </div>
     </main>
