@@ -89,9 +89,13 @@ function Index() {
               <p className="text-[11px] leading-tight text-app-muted">Converter</p>
             </div>
           </div>
-          <div className="text-[11px] font-medium uppercase tracking-wider text-app-muted">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-300">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            </span>
             Live
-          </div>
+          </span>
         </header>
 
         {/* Unit segmented control */}
