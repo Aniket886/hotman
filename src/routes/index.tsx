@@ -177,6 +177,24 @@ function Index() {
               {currentSymbol}
             </span>
           </div>
+
+          {vibe && (
+            <div className="mt-4 flex justify-center">
+              <div
+                key={vibe.id}
+                className="animate-vibe-pop inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[12px] font-semibold backdrop-blur-md"
+                style={{
+                  borderColor: `rgb(${vibe.tint} / 0.35)`,
+                  background: `rgb(${vibe.tint} / 0.12)`,
+                  color: `rgb(${vibe.tint})`,
+                  boxShadow: `0 4px 16px -8px rgb(${vibe.tint} / 0.5), inset 0 1px 0 0 var(--glass-highlight)`,
+                }}
+              >
+                <span className="text-base leading-none">{vibe.emoji}</span>
+                <span className="tracking-wide">{vibe.label}</span>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Result rows */}
