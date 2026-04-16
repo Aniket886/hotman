@@ -207,8 +207,9 @@ function Index() {
                 className="glass flex items-center justify-between rounded-2xl px-5 py-4"
               >
                 <div>
-                  <div className="text-[11px] font-medium uppercase tracking-wider text-app-muted">
-                    {u.label}
+                  <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-app-muted">
+                    {vibe && <span className="text-sm leading-none">{vibe.emoji}</span>}
+                    <span>{u.label}</span>
                   </div>
                   <div className="mt-0.5 text-[11px] text-app-subtle">{u.symbol}</div>
                 </div>
