@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
-import { Github, Sparkles } from "lucide-react";
+import { Check, Copy, Github, Sparkles } from "lucide-react";
 import { InstallButton } from "@/components/InstallButton";
 import logo from "@/assets/logo.png";
 
@@ -72,6 +72,17 @@ const getVibe = (c: number): Vibe => {
 function Index() {
   const [unit, setUnit] = useState<Unit>("C");
   const [raw, setRaw] = useState("100");
+  const [copiedKey, setCopiedKey] = useState<Unit | null>(null);
+
+  const copyValue = async (key: Unit, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedKey(key);
+      window.setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1400);
+    } catch {
+      // ignore
+    }
+  };
 
   const results = useMemo(() => {
     const num = parseFloat(raw);
@@ -319,6 +330,8 @@ function Index() {
         <section className="mb-4 space-y-2">
           {UNITS.filter((u) => u.key !== unit).map((u) => {
             const val = results ? fmt(results[u.key]) : "—";
+            const copyText = results ? `${val}${u.symbol}` : "";
+            const copied = copiedKey === u.key;
             return (
               <div
                 key={u.key}
@@ -331,8 +344,24 @@ function Index() {
                   </div>
                   <div className="mt-0.5 text-[11px] text-app-subtle">{u.symbol}</div>
                 </div>
-                <div className="font-mono text-2xl font-semibold tracking-tight text-app-fg">
-                  {val}
+                <div className="flex items-center gap-3">
+                  <div className="font-mono text-2xl font-semibold tracking-tight text-app-fg">
+                    {val}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => results && copyValue(u.key, copyText)}
+                    disabled={!results}
+                    aria-label={`Copy ${u.label} value`}
+                    className={[
+                      "flex h-8 w-8 items-center justify-center rounded-lg border transition-all duration-200 active:scale-90 disabled:cursor-not-allowed disabled:opacity-40",
+                      copied
+                        ? "border-emerald-400/40 bg-emerald-400/15 text-emerald-300"
+                        : "border-white/10 bg-white/5 text-app-muted hover:border-white/20 hover:bg-white/10 hover:text-app-fg",
+                    ].join(" ")}
+                  >
+                    {copied ? <Check size={14} strokeWidth={2.6} /> : <Copy size={14} strokeWidth={2.2} />}
+                  </button>
                 </div>
               </div>
             );
