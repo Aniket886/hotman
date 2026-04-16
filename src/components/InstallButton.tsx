@@ -109,7 +109,6 @@ export function InstallButton() {
                 }
                 aria-label={`Install on ${label}`}
               >
-                <Icon size={18} aria-hidden="true" />
                 <span>{label}</span>
                 {isRecommended && (
                   <span
