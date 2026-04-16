@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { InstallButton } from "@/components/InstallButton";
+import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -71,14 +72,14 @@ function Index() {
         {/* Sticky app header */}
         <header className="sticky top-0 z-10 -mx-4 mb-2 flex items-center justify-between bg-app-bg/85 px-4 py-3 backdrop-blur-xl">
           <div className="flex items-center gap-2.5">
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl"
-              style={{
-                background: "var(--accent-1)",
-                boxShadow: "inset 0 1px 0 0 var(--glass-highlight)",
-              }}
-            >
-              <span className="font-mono text-sm font-bold text-white">°</span>
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white/5">
+              <img
+                src={logo}
+                alt="Temperature Converter logo"
+                width={40}
+                height={40}
+                className="h-full w-full object-contain"
+              />
             </div>
             <div>
               <h1 className="text-[15px] font-semibold leading-tight tracking-tight">
