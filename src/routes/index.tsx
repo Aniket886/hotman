@@ -153,7 +153,17 @@ function Index() {
         </section>
 
         {/* Input card */}
-        <section className="glass-strong mb-4 rounded-3xl p-5">
+        <section
+          className="glass-strong relative mb-4 overflow-hidden rounded-3xl p-5 transition-[background,box-shadow] duration-700 ease-out"
+          style={
+            vibe
+              ? {
+                  background: `radial-gradient(120% 80% at 0% 0%, rgb(${vibe.tint} / 0.18) 0%, transparent 55%), radial-gradient(120% 80% at 100% 100%, rgb(${vibe.tint} / 0.10) 0%, transparent 60%), var(--glass-strong)`,
+                  boxShadow: `0 8px 32px -16px rgb(${vibe.tint} / 0.45), inset 0 1px 0 0 var(--glass-highlight)`,
+                }
+              : undefined
+          }
+        >
           <div className="mb-3 flex items-center justify-between">
             <span className="text-[11px] font-medium uppercase tracking-wider text-app-muted">
               Enter value
