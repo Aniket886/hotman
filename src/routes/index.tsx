@@ -89,6 +89,45 @@ function Index() {
     setRaw(String(c));
   };
 
+  // Spectrum drag
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const draggingRef = useRef(false);
+  const SPEC_MIN = -50;
+  const SPEC_MAX = 110;
+
+  const fromC = (c: number, u: Unit) => {
+    if (u === "C") return c;
+    if (u === "F") return (c * 9) / 5 + 32;
+    return c + 273.15;
+  };
+
+  const updateFromPointer = (clientX: number) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const c = SPEC_MIN + ratio * (SPEC_MAX - SPEC_MIN);
+    setRaw(fromC(c, unit).toFixed(1));
+  };
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    draggingRef.current = true;
+    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+    updateFromPointer(e.clientX);
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingRef.current) return;
+    updateFromPointer(e.clientX);
+  };
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    draggingRef.current = false;
+    try {
+      (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+  };
+
   return (
     <main className="min-h-screen bg-app-bg text-app-fg">
       <div className="mx-auto flex min-h-screen max-w-[440px] flex-col px-4 safe-top safe-bottom">
