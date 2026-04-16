@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
-import { Github } from "lucide-react";
+import { Github, Sparkles } from "lucide-react";
 import { InstallButton } from "@/components/InstallButton";
 import logo from "@/assets/logo.png";
 
