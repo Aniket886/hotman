@@ -55,6 +55,7 @@ export function InstallButton() {
     return () => {
       window.removeEventListener("beforeinstallprompt", onPrompt);
       window.removeEventListener("appinstalled", onInstalled);
+      window.removeEventListener("resize", detect);
     };
   }, []);
 
