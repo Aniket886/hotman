@@ -1,23 +1,29 @@
 
-Build a temperature converter web app based on your uploaded HTML design.
+User wants a modern glassmorphism redesign of the temperature converter. Current design is minimal/flat. I'll transform it into a frosted-glass aesthetic.
 
-**Features**
-- Input unit selector: Celsius, Fahrenheit, Kelvin (pill buttons)
-- Numeric input with live conversion as you type
-- Three result cards showing all three units side-by-side, with the active input unit highlighted
-- Reference table of common temperatures (freezing point, body temp, boiling point, absolute zero, etc.) shown in all three units
-- Clean, minimal layout with monospace numbers, matching the uploaded design
+**Design direction**
+- Vibrant gradient background (animated soft blobs) so glass effect is visible
+- Frosted glass panels: `backdrop-blur`, semi-transparent white/dark surfaces, subtle inner border highlight, soft shadows
+- Glow accents on the active unit pill and active result card
+- Keep JetBrains Mono for numbers; Inter for UI
+- Light + dark mode both look great (default to dark since glass pops more on dark gradients)
 
-**Pages**
-- Single page at `/` (replaces the placeholder index)
+**Changes**
+1. `src/styles.css`
+   - Switch default theme to dark glass palette
+   - New tokens: `--glass-bg`, `--glass-border`, `--glass-highlight`, `--glow`, gradient stops
+   - Add body background: layered radial gradients (purple/blue/pink blobs) + subtle noise
+   - Add `.glass` utility-ish base via tokens
 
-**Design**
-- Minimal, typography-focused aesthetic from your HTML mock
-- Monospace font for numbers (JetBrains Mono via Google Fonts)
-- Light, neutral palette with subtle borders and rounded cards
-- Responsive: results grid collapses gracefully on mobile
+2. `src/routes/index.tsx`
+   - Wrap main card in a frosted glass container
+   - Pill buttons: glass with active state showing inner glow + gradient border
+   - Input: translucent with backdrop blur, glowing focus ring
+   - Result cards: each is its own glass tile; active card gets accent gradient border + glow
+   - Reference table: glass panel with divider lines using border-white/10
+   - Animated floating gradient blobs behind everything (absolute positioned divs, blurred)
+   - Add subtle hover lift on cards
 
-**Tech**
-- TanStack Start route with React state for live conversion
-- Tailwind tokens mapped to the CSS variables your mock used (background-secondary, border-tertiary, text-secondary, etc.) so the look matches
-- No backend needed — pure client-side math
+**Layout** stays the same (header, unit selector, input, 3 result tiles, reference list, footer) — only visual treatment changes. Mobile responsiveness preserved.
+
+No new dependencies needed.
